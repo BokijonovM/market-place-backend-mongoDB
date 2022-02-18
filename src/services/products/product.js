@@ -1,7 +1,9 @@
 import express from "express";
 import ProductsModel from "./schema.js";
 import createHttpError from "http-errors";
-import q2m from "query-to-mongo";
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 const productsRouter = express.Router();
 
@@ -17,7 +19,7 @@ productsRouter.post("/", async (req, res, next) => {
 
 productsRouter.get("/", async (req, res, next) => {
   try {
-    const product = await ProductsModel.find();
+    const product = await ProductsModel.find().limit(10).sort({ price: 1 });
     res.send(product);
   } catch (error) {
     next(error);
@@ -72,6 +74,30 @@ productsRouter.delete("/:productId", async (req, res, next) => {
     next(error);
   }
 });
+
+productsRouter.post(
+  "/:productId/cover",
+  multer({ storage: cloudinaryStorage }).single("cover"),
+  async (req, res, next) => {
+    try {
+      const productId = req.params.productId;
+      const updatedProduct = await ProductsModel.findByIdAndUpdate(
+        productId,
+        { imageUrl: req.file.path },
+        {
+          new: true,
+        }
+      );
+      if (updatedProduct) {
+        res.send(updatedProduct);
+      } else {
+        next(createHttpError(404, `Product with id ${productId} not found!`));
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 //
 //
