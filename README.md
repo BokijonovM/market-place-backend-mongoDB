@@ -30,7 +30,7 @@ https://m6-benchmark.herokuapp.com/product/{productId}/cover
 ```jsx
 https://m6-benchmark.herokuapp.com/product/{productId}/review
 ```
-## POST product method requiremnts
+## POST review to product method requiremnts
 ```jsx
 {
     "rate" : product review max:5, min:1,
