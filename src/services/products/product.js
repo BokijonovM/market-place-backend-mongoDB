@@ -72,4 +72,31 @@ productsRouter.delete("/:productId", async (req, res, next) => {
   }
 });
 
+//
+//
+//
+// reviews *******************************************************************
+
+productsRouter.post("/:productId/review", async (req, res, next) => {
+  try {
+    const updatedProduct = await ProductsModel.findByIdAndUpdate(
+      req.params.productId,
+      { $push: { reviews: req.body } },
+      { new: true }
+    );
+    if (updatedProduct) {
+      res.send(updatedProduct);
+    } else {
+      next(
+        createHttpError(
+          404,
+          `Product with id ${req.params.productId} not found!`
+        )
+      );
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default productsRouter;

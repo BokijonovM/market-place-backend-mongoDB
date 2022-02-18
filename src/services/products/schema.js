@@ -14,6 +14,7 @@ const ProductSchema = new Schema(
       {
         comment: { type: String, required: true },
         rate: { type: Number, required: true, min: 1, max: 5 },
+        productId: { type: String, required: true },
       },
     ],
   },
