@@ -136,20 +136,18 @@ productsRouter.get("/:productId/review/:reviewId", async (req, res, next) => {
 
 productsRouter.put("/:productId/review/:reviewId", async (req, res, next) => {
   try {
-    const product = await ProductsModel.findById(req.params.productId); // user is a MONGOOSE DOCUMENT, it is NOT A PLAIN OBJECT
+    const product = await ProductsModel.findById(req.params.productId);
     if (product) {
       const index = product.reviews.findIndex(
         reviews => reviews._id.toString() === req.params.reviewId
       );
 
       if (index !== -1) {
-        // we can modify user.purchaseHistory[index] element with what comes from request body
         product.reviews[index] = {
-          ...product.reviews[index].toObject(), // DO NOT FORGET .toObject() when spreading
-          ...req.body,
+          ...product.reviews[index].toObject(),
         };
 
-        await product.save(); // since user is a MONGOOSE DOCUMENT I can use some of his special powers like .save() method
+        await product.save();
         res.send(product);
       } else {
         next(
