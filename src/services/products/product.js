@@ -19,16 +19,6 @@ productsRouter.get("/", async (req, res, next) => {
   try {
     const product = await ProductsModel.find();
     res.send(product);
-    // const mongoQuery = q2m(req.query);
-    // const { total, reviews } = await ProductsModel.findReviewsWithProducts(
-    //   mongoQuery
-    // );
-    // res.send({
-    //   links: mongoQuery.links("/product", total),
-    //   total,
-    //   totalPages: Math.ceil(total / mongoQuery.options.limit),
-    //   reviews,
-    // });
   } catch (error) {
     next(error);
   }
@@ -109,5 +99,102 @@ productsRouter.post("/:productId/review", async (req, res, next) => {
     next(error);
   }
 });
+
+productsRouter.get("/:productId/review", async (req, res, next) => {
+  try {
+    const product = await ProductsModel.findById(req.params.productId);
+    if (product) {
+      res.send(product.reviews);
+    } else {
+      res.status(404).send(`Not found`);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+productsRouter.get("/:productId/review/:reviewId", async (req, res, next) => {
+  try {
+    const product = await ProductsModel.findById(req.params.productId);
+    const findReview = product.reviews?.find(
+      findReview => findReview._id.toString() === req.params.reviewId
+    );
+    if (findReview) {
+      res.send(findReview);
+    } else {
+      next(
+        createHttpError(
+          404,
+          `Product with Id ${req.params.productId} not found!`
+        )
+      );
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+productsRouter.put("/:productId/review/:reviewId", async (req, res, next) => {
+  try {
+    const product = await ProductsModel.findById(req.params.productId); // user is a MONGOOSE DOCUMENT, it is NOT A PLAIN OBJECT
+    if (product) {
+      const index = product.reviews.findIndex(
+        reviews => reviews._id.toString() === req.params.reviewId
+      );
+
+      if (index !== -1) {
+        // we can modify user.purchaseHistory[index] element with what comes from request body
+        product.reviews[index] = {
+          ...product.reviews[index].toObject(), // DO NOT FORGET .toObject() when spreading
+          ...req.body,
+        };
+
+        await product.save(); // since user is a MONGOOSE DOCUMENT I can use some of his special powers like .save() method
+        res.send(product);
+      } else {
+        next(
+          createHttpError(
+            404,
+            `Review with id ${req.params.commentId} not found!`
+          )
+        );
+      }
+    } else {
+      next(
+        createHttpError(
+          404,
+          `Product with id ${req.params.productId} not found!`
+        )
+      );
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+productsRouter.delete(
+  "/:productId/review/:reviewId",
+  async (req, res, next) => {
+    try {
+      const modifiedBlogPost = await ProductsModel.findByIdAndUpdate(
+        req.params.productId,
+        { $pull: { reviews: { _id: req.params.reviewId } } }, // HOW
+        { new: true }
+      );
+      if (modifiedBlogPost) {
+        res.send(modifiedBlogPost);
+      } else {
+        next(
+          createHttpError(
+            404,
+            `Product with Id ${req.params.productId} not found!`
+          )
+        );
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 export default productsRouter;
