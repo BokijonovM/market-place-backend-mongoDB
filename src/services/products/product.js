@@ -5,6 +5,15 @@ import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 
+const cloudinaryUploader = multer({
+  storage: new CloudinaryStorage({
+    cloudinary,
+    params: {
+      folder: "product",
+    },
+  }),
+}).single("cover");
+
 const productsRouter = express.Router();
 
 productsRouter.post("/", async (req, res, next) => {
@@ -77,7 +86,7 @@ productsRouter.delete("/:productId", async (req, res, next) => {
 
 productsRouter.post(
   "/:productId/cover",
-  multer({ storage: cloudinaryStorage }).single("cover"),
+  cloudinaryUploader,
   async (req, res, next) => {
     try {
       const productId = req.params.productId;
