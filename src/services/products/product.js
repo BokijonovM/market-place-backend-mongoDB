@@ -1,6 +1,7 @@
 import express from "express";
 import ProductsModel from "./schema.js";
 import createHttpError from "http-errors";
+import q2m from "query-to-mongo";
 
 const productsRouter = express.Router();
 
@@ -18,6 +19,16 @@ productsRouter.get("/", async (req, res, next) => {
   try {
     const product = await ProductsModel.find();
     res.send(product);
+    // const mongoQuery = q2m(req.query);
+    // const { total, reviews } = await ProductsModel.findReviewsWithProducts(
+    //   mongoQuery
+    // );
+    // res.send({
+    //   links: mongoQuery.links("/product", total),
+    //   total,
+    //   totalPages: Math.ceil(total / mongoQuery.options.limit),
+    //   reviews,
+    // });
   } catch (error) {
     next(error);
   }

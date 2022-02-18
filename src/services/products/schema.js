@@ -23,4 +23,17 @@ const ProductSchema = new Schema(
   }
 );
 
+// ProductSchema.static("findReviewsWithProducts", async function (mongoQuery) {
+//   const total = await this.countDocuments(mongoQuery.criteria);
+//   const reviews = await this.find(mongoQuery.criteria)
+//     .limit(mongoQuery.options.limit)
+//     .skip(mongoQuery.options.skip)
+//     .sort(mongoQuery.options.sort)
+//     .populate({
+//       path: "Product",
+//       select: "name brand",
+//     });
+//   return { total, reviews };
+// });
+
 export default model("Product", ProductSchema);
