@@ -6,6 +6,21 @@ npm i
 ```jsx
 https://m6-benchmark.herokuapp.com/product
 ```
+
+## POST product method requiremnts
+```jsx
+{
+    "name": "product name", 
+    "description": "description",
+    "brand": "brand name", 
+    "imageUrl": "image url",
+    "price": product price, 
+    "category": "category"
+}
+```
+
+
+
 ## API for upload product image to cloudinary
 ```jsx
 https://m6-benchmark.herokuapp.com/product/{productId}/cover
@@ -14,4 +29,12 @@ https://m6-benchmark.herokuapp.com/product/{productId}/cover
 ## API for product reviews
 ```jsx
 https://m6-benchmark.herokuapp.com/product/{productId}/review
+```
+## POST product method requiremnts
+```jsx
+{
+    "rate" : product review max:5, min:1,
+    "comment": "comment",
+    "productId": "_id of the product that youwant to add comment to"
+}
 ```
