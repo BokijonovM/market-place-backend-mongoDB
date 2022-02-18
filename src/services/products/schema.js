@@ -9,11 +9,11 @@ const ProductSchema = new Schema(
     brand: { type: String, required: true },
     imageUrl: { type: String, required: true },
     price: { type: Number, required: true },
-    Category: { type: String, required: true },
+    category: { type: String, required: true },
     reviews: [
       {
         comment: { type: String, required: true },
-        rate: { type: Number, required: true, min:1, max:5 }
+        rate: { type: Number, required: true, min: 1, max: 5 },
       },
     ],
   },
