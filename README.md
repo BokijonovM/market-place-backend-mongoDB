@@ -35,8 +35,8 @@ https://m6-benchmark.herokuapp.com/product/{productId}/review
 ## POST review to product method requiremnts
 ```jsx
 {
-    "rate" : product review max:5, min:1,
+    "rate" : product review, max:5, min:1,
     "comment": "comment",
-    "productId": "_id of the product that youwant to add comment to"
+    "productId": "_id of the product that you want to add comment to"
 }
 ```
