@@ -28,7 +28,7 @@ productsRouter.post("/", async (req, res, next) => {
 
 productsRouter.get("/", async (req, res, next) => {
   try {
-    const product = await ProductsModel.find().limit(10).sort({ updatedAt: 1 });
+    const product = await ProductsModel.find().sort({ updatedAt: 1 });
     res.send(product);
   } catch (error) {
     next(error);
